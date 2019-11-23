@@ -2,8 +2,10 @@ const express = require('express');
 
 const app = express();
 
-app.get('/strings/hello/world', (req, res) => {
-  res.status(200).json({ result: 'Hello world!' });
+const { sayHello } = require('../src/lib/strings');
+
+app.get('/strings/hello/:string', (req, res) => {
+  res.status(200).json({ result: `${sayHello(req.params.string)}` });
 });
 
 module.exports = app;
