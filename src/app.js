@@ -2,6 +2,8 @@ const express = require('express');
 
 const app = express();
 
+app.use(express.json());
+
 const strings = require('../src/lib/strings');
 const numbers = require('../src/lib/numbers');
 
@@ -32,7 +34,6 @@ app.get('/numbers/add/:n1/and/:n2', (req, res) => {
   }
 });
 
-// numbers
 app.get('/numbers/add/:n1/and/:n2', (req, res) => {
   const isNumeric = (string) => { return /^\d+$/.test(string); };
   if (isNumeric(req.params.n1) || isNumeric(req.params.n2)) {
@@ -42,7 +43,6 @@ app.get('/numbers/add/:n1/and/:n2', (req, res) => {
   }
 });
 
-// numbers
 app.get('/numbers/subtract/:n2/from/:n1', (req, res) => {
   const isNumeric = (string) => { return /^\d+$/.test(string); };
   if (isNumeric(req.params.n1) || isNumeric(req.params.n2)) {
@@ -52,6 +52,16 @@ app.get('/numbers/subtract/:n2/from/:n1', (req, res) => {
   }
 });
 
-
+app.post('/numbers/multiply', (req, res) => {
+  const a = parseInt(req.body.a);
+  const b = parseInt(req.body.b);
+  if (req.body.a === undefined || req.body.b === undefined ) {
+    res.status(400).json({ error: 'Parameters "a" and "b" are required.' });
+  } else if (!isNaN(a) || !isNaN(b)) {
+    res.status(200).json({ result: numbers.multiply((a), (b)) });
+  } else {
+    res.status(400).json({ error: 'Parameters "a" and "b" must be valid numbers.' });
+  }
+});
 
 module.exports = app;
